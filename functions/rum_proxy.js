@@ -10,8 +10,15 @@ export async function onRequestPost(context) {
     body: body,
   });
 
-  return new Response(response.body, {
-    status: response.status,
-    headers: response.headers,
-  });
+  const text = await response.text();
+  console.log("status:", response.status);
+  console.log("body:", text);
+
+  return new Response(
+    JSON.stringify({
+      status: response.status,
+      body: text,
+    }),
+    { status: 200 },
+  );
 }
