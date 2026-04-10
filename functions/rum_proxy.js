@@ -1,9 +1,17 @@
 export async function onRequestPost(context) {
   const request = context.request;
+  const body = await request.arrayBuffer();
+
   const response = await fetch("https://cloudflareinsights.com/cdn-cgi/rum", {
     method: "POST",
-    headers: request.headers,
-    body: request.body,
+    headers: {
+      "Content-Type": request.headers.get("Content-Type"),
+    },
+    body: body,
   });
-  return response;
+
+  return new Response(response.body, {
+    status: response.status,
+    headers: response.headers,
+  });
 }
